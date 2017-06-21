@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name of Device"
+            android:id="@+id/txtName"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:textSize="25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="null"
+            android:id="@+id/txtRSSI"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="20dp"
+            android:layout_alignTop="@+id/txtName"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MAC Address"
+            android:id="@+id/txtMac"
+            android:layout_below="@+id/txtName"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sBeacon"
+            android:id="@+id/txtTypeSBeacon"
+            android:layout_marginTop="24dp"
+            android:layout_alignTop="@+id/txtMac"
+            android:layout_alignStart="@+id/txtMac"
+            android:layout_marginBottom="20dp"
+            android:textSize="9dp"
+            android:textStyle="italic"
+            android:textColor="#c5c5c5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="iBeacon"
+            android:id="@+id/txtTypeIBeacon"
+            android:layout_alignTop="@+id/txtTypeSBeacon"
+            android:layout_toEndOf="@+id/txtTypeSBeacon"
+            android:layout_marginLeft="5dp"
+            android:textSize="9dp"
+            android:textStyle="italic"
+            android:textColor="#c5c5c5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EddystoneUID"
+            android:id="@+id/txtTypeEddystoneUID"
+            android:layout_marginLeft="5dp"
+            android:layout_alignTop="@+id/txtTypeIBeacon"
+            android:layout_toEndOf="@+id/txtTypeIBeacon"
+            android:textSize="9dp"
+            android:textStyle="italic"
+            android:textColor="#c5c5c5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EddystoneURL"
+            android:id="@+id/txtTypeEddystoneURL"
+            android:layout_marginLeft="5dp"
+            android:layout_alignTop="@+id/txtTypeEddystoneUID"
+            android:layout_toEndOf="@+id/txtTypeEddystoneUID"
+            android:textSize="9dp"
+            android:textStyle="italic"
+            android:textColor="#c5c5c5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EddystoneTLM"
+            android:id="@+id/txtTypeEddystoneTLM"
+            android:layout_marginLeft="5dp"
+            android:layout_alignTop="@+id/txtTypeEddystoneURL"
+            android:layout_toEndOf="@+id/txtTypeEddystoneURL"
+            android:textSize="9dp"
+            android:textStyle="italic"
+            android:textColor="#c5c5c5" />
+
+    </RelativeLayout>
+
+</LinearLayout>
