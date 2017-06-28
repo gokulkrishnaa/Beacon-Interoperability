@@ -82,5 +82,19 @@ public class BeaconDetails {
         }
     }
 
+    public boolean isEddyStone(BeaconInstance beaconInstance) {
+        boolean is_eddystone = false;
+
+        if (beaconInstance != null) {
+            for (String tt : beaconInstance.type.keySet()) {
+                switch (tt) {
+                    case "EDDYSTONE_UID_BEACON":
+                        is_eddystone = true;
+                        break;
+                }
+            }
+        }
+        return is_eddystone;
+    }
 }
 

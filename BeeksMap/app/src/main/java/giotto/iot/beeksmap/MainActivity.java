@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bluvision.beeks.sdk.constants.BeaconType;
@@ -63,6 +64,8 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
     private List<String> mac_list = new ArrayList<>();
     private List<String> not_mac_list = new ArrayList<>();
 
+    private List<String> hack_list = new ArrayList<>();
+
     BDHelper bdHelper = new BDHelper();
     boolean isBDBeacon;
 
@@ -70,11 +73,15 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
     HashMap latlong = new HashMap();
 
     Button btnMap;
+    TextView dummy;
     ImageView imageView;
     Bitmap mutableBitmap;
     Canvas canvas;
     Paint paintCircle;
     Paint paintLine;
+
+    String hack_mac;
+    boolean flag = true;
 
     String oldX = "", oldY = "", newX, newY;
 
@@ -87,6 +94,7 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
 
         initialSetup();
         btnMap = (Button) findViewById(R.id.map);
+        dummy = (TextView) findViewById(R.id.dummy);
 
         beaconInstanceList.add(new BeaconInstance(null));
 
@@ -145,7 +153,12 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
                     if(beaconsFound!=0)
                     {
                         String[] xy = findLocation();
-                        navigateParser(xy);
+
+                        if(!(hack_list.contains(hack_mac))) {
+                            navigateParser(xy);
+                            hack_list.add(hack_mac);
+                        }
+
                         Log.d(TAG, oldX+" "+oldY+"\t"+newX+" "+newY);
                     }
 
@@ -184,7 +197,9 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
             }
         }
 
-        btnMap.setText(min_mac);
+        hack_mac = min_mac;
+
+        btnMap.setText(min_mac + " " + min_rssi);
 
         String xy[] = null;
         if(latlong.containsKey(min_mac))
@@ -433,7 +448,13 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
             if (beaconInstance.name != null) {
                 beaconsFound++;
                 detailsHelper.updateBeacon(beaconInstance, getApplicationContext());
-                mapHash.put(beaconInstance.macAddress, beaconInstance.rssi);
+                String rssi_local = beaconInstance.rssi;
+                if(detailsHelper.isEddyStone(beaconInstance))
+                    rssi_local = String.valueOf((Integer.parseInt(rssi_local)-20));
+                else
+                    rssi_local = String.valueOf((Integer.parseInt(rssi_local)-5));
+                mapHash.put(beaconInstance.macAddress, rssi_local);
+                Log.d("Find", beaconInstance.macAddress + "\t" + beaconInstance.rssi + "\t" + rssi_local);
             }
         }
         return beaconsFound;
