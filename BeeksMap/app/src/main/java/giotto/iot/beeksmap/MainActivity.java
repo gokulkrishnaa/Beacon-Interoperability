@@ -48,11 +48,12 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends Activity implements BeaconListener, OnBeaconChangeListener {
 
     String TAG = "MapActivity";
+    int k= 0;
 
     private final static int PERMISSION_REQUEST_COARSE_LOCATION = 1984;
 
-    private static final int SCAN_TIME_MILLIS = 5000;
-    private static final int RESCAN_TIME_MILLIS = 8000;
+    private static final int SCAN_TIME_MILLIS = 4000;
+    private static final int RESCAN_TIME_MILLIS = 9000;
 
     private static final Handler handler = new Handler(Looper.getMainLooper());
     Timer timer = new Timer();
@@ -65,6 +66,7 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
     private List<String> not_mac_list = new ArrayList<>();
 
     private List<String> hack_list = new ArrayList<>();
+    private List<String> eddy_list = new ArrayList<>();
 
     BDHelper bdHelper = new BDHelper();
     boolean isBDBeacon;
@@ -81,7 +83,7 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
     Paint paintLine;
 
     String hack_mac;
-    boolean flag = true;
+    int hack_rssi;
 
     String oldX = "", oldY = "", newX, newY;
 
@@ -153,10 +155,20 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
                     if(beaconsFound!=0)
                     {
                         String[] xy = findLocation();
-
+                        int least_rssi = hack_rssi;
+                        boolean drawOnMap = false;
                         if(!(hack_list.contains(hack_mac))) {
-                            navigateParser(xy);
-                            hack_list.add(hack_mac);
+                            if(eddy_list.contains(hack_mac)){
+                                if (least_rssi<85)
+                                    drawOnMap = true;
+                            }
+                            else if(least_rssi<90 && !drawOnMap)
+                                drawOnMap = true;
+                            if(drawOnMap) {
+                                btnMap.setText(hack_mac + "  -" + hack_rssi);
+                                navigateParser(xy);
+                                hack_list.add(hack_mac);
+                            }
                         }
 
                         Log.d(TAG, oldX+" "+oldY+"\t"+newX+" "+newY);
@@ -198,8 +210,7 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
         }
 
         hack_mac = min_mac;
-
-        btnMap.setText(min_mac + " " + min_rssi);
+        hack_rssi = min;
 
         String xy[] = null;
         if(latlong.containsKey(min_mac))
@@ -448,15 +459,22 @@ public class MainActivity extends Activity implements BeaconListener, OnBeaconCh
             if (beaconInstance.name != null) {
                 beaconsFound++;
                 detailsHelper.updateBeacon(beaconInstance, getApplicationContext());
-                String rssi_local = beaconInstance.rssi;
-                if(detailsHelper.isEddyStone(beaconInstance))
-                    rssi_local = String.valueOf((Integer.parseInt(rssi_local)-20));
-                else
-                    rssi_local = String.valueOf((Integer.parseInt(rssi_local)-5));
-                mapHash.put(beaconInstance.macAddress, rssi_local);
-                Log.d("Find", beaconInstance.macAddress + "\t" + beaconInstance.rssi + "\t" + rssi_local);
+
+                String rssi_mod = beaconInstance.rssi;
+
+                if(detailsHelper.isEddyStone(beaconInstance)) {
+                    rssi_mod = String.valueOf((Integer.parseInt(rssi_mod)-10));
+                    Log.d("Find", beaconInstance.macAddress + "\t" + beaconInstance.rssi + "\t" + rssi_mod);
+                    if (!(eddy_list.contains(beaconInstance.macAddress)))
+                        eddy_list.add(beaconInstance.macAddress);
+
+                }
+
+                mapHash.put(beaconInstance.macAddress, rssi_mod);
+//                Log.d("Find", beaconInstance.macAddress + "\t" + beaconInstance.rssi + "\t" + rssi_local);
             }
         }
+//        Log.d("Find", "--------------------------------------------------------");
         return beaconsFound;
     }
 }
